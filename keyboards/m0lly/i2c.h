@@ -16,7 +16,7 @@
 #define SLAVE_BUFFER_SIZE 0x10
 
 // i2c SCL clock frequency
-#define SCL_CLOCK  100000L
+#define SCL_CLOCK  800000L
 
 extern volatile uint8_t i2c_slave_buffer[SLAVE_BUFFER_SIZE];
 
