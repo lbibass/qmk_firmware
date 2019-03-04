@@ -9,3 +9,4 @@ BACKLIGHT_ENABLE = yes  # Enable keyboard backlight functionality
 AUDIO_ENABLE = no
 RGBLIGHT_ENABLE = yes
 TAP_DANCE_ENABLE = yes
+VELOCIKEY_ENABLE = yes
