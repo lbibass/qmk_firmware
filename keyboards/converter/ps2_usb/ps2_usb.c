@@ -1,3 +1,4 @@
+#include "ps2.h"
 #include "ps2_usb.h"
 
 #include "led.h"

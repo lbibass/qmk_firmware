@@ -24,6 +24,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "host.h"
 #include "matrix.h"
 
+#include "ps2_usb.h"
+
+
 static void matrix_make(uint8_t code);
 static void matrix_break(uint8_t code);
 void matrix_clear(void);
@@ -58,9 +61,9 @@ static uint16_t matrix[MATRIX_ROWS];
 #define COL(code)      (code&0x07)
 
 // matrix positions for exceptional keys
-#define F7             (0x83)
-#define PRINT_SCREEN   (0xFC)
-#define PAUSE          (0xFE)
+#define PS2_F7             (0x83)
+#define PS2_PRINT_SCREEN   (0xFC)
+#define PS2_PAUSE          (0xFE)
 
 static bool is_modified = false;
 
@@ -87,6 +90,7 @@ void matrix_init(void)
 {
     debug_enable = true;
     ps2_host_init();
+
 
     // initialize matrix state: all keys off
     for (uint8_t i=0; i < MATRIX_ROWS; i++) matrix[i] = 0x00;
@@ -163,66 +167,66 @@ uint8_t matrix_scan(void)
 
     // scan code reading states
     static enum {
-        INIT,
-        F0,
-        E0,
-        E0_F0,
+        PS2_INIT,
+        PS2_F0,
+        PS2_E0,
+        PS2_E0_F0,
         // Pause
-        E1,
-        E1_14,
-        E1_14_77,
-        E1_14_77_E1,
-        E1_14_77_E1_F0,
-        E1_14_77_E1_F0_14,
-        E1_14_77_E1_F0_14_F0,
+        PS2_E1,
+        PS2_E1_14,
+        PS2_E1_14_77,
+        PS2_E1_14_77_E1,
+        PS2_E1_14_77_E1_F0,
+        PS2_E1_14_77_E1_F0_14,
+        PS2_E1_14_77_E1_F0_14_F0,
         // Control'd Pause
-        E0_7E,
-        E0_7E_E0,
-        E0_7E_E0_F0,
-    } state = INIT;
+        PS2_E0_7E,
+        PS2_E0_7E_E0,
+        PS2_E0_7E_E0_F0,
+    } state = PS2_INIT;
 
 
     is_modified = false;
 
     // 'pseudo break code' hack
-    if (matrix_is_on(ROW(PAUSE), COL(PAUSE))) {
-        matrix_break(PAUSE);
+    if (matrix_is_on(ROW(PS2_PAUSE), COL(PS2_PAUSE))) {
+        matrix_break(PS2_PAUSE);
     }
 
     uint8_t code = ps2_host_recv();
     if (code) xprintf("%i\r\n", code);
     if (!ps2_error) {
         switch (state) {
-            case INIT:
+            case PS2_INIT:
                 switch (code) {
                     case 0xE0:
-                        state = E0;
+                        state = PS2_E0;
                         break;
                     case 0xF0:
-                        state = F0;
+                        state = PS2_F0;
                         break;
                     case 0xE1:
-                        state = E1;
+                        state = PS2_E1;
                         break;
                     case 0x83:  // F7
-                        matrix_make(F7);
-                        state = INIT;
+                        matrix_make(PS2_F7);
+                        state = PS2_INIT;
                         break;
                     case 0x84:  // Alt'd PrintScreen
-                        matrix_make(PRINT_SCREEN);
-                        state = INIT;
+                        matrix_make(PS2_PRINT_SCREEN);
+                        state = PS2_INIT;
                         break;
                     case 0x00:  // Overrun [3]p.25
                         matrix_clear();
                         clear_keyboard();
                         print("Overrun\n");
-                        state = INIT;
+                        state = PS2_INIT;
                         break;
                     case 0xAA:  // Self-test passed
                     case 0xFC:  // Self-test failed
-                        printf("BAT %s\n", (code == 0xAA) ? "OK" : "NG");
+                        xprintf("BAT %s\n", (code == 0xAA) ? "OK" : "NG");
                         led_set(host_keyboard_leds());
-                        state = INIT;
+                        state = PS2_INIT;
                         break;
                     default:    // normal key make
                         if (code < 0x80) {
@@ -232,20 +236,20 @@ uint8_t matrix_scan(void)
                             clear_keyboard();
                             xprintf("unexpected scan code at INIT: %02X\n", code);
                         }
-                        state = INIT;
+                        state = PS2_INIT;
                 }
                 break;
-            case E0:    // E0-Prefixed
+            case PS2_E0:    // E0-Prefixed
                 switch (code) {
                     case 0x12:  // to be ignored
                     case 0x59:  // to be ignored
-                        state = INIT;
+                        state = PS2_INIT;
                         break;
                     case 0x7E:  // Control'd Pause
-                        state = E0_7E;
+                        state = PS2_E0_7E;
                         break;
                     case 0xF0:
-                        state = E0_F0;
+                        state = PS2_E0_F0;
                         break;
                     default:
                         if (code < 0x80) {
@@ -255,18 +259,18 @@ uint8_t matrix_scan(void)
                             clear_keyboard();
                             xprintf("unexpected scan code at E0: %02X\n", code);
                         }
-                        state = INIT;
+                        state = PS2_INIT;
                 }
                 break;
-            case F0:    // Break code
+            case PS2_F0:    // Break code
                 switch (code) {
                     case 0x83:  // F7
-                        matrix_break(F7);
-                        state = INIT;
+                        matrix_break(PS2_F7);
+                        state = PS2_INIT;
                         break;
                     case 0x84:  // Alt'd PrintScreen
-                        matrix_break(PRINT_SCREEN);
-                        state = INIT;
+                        matrix_break(PS2_PRINT_SCREEN);
+                        state = PS2_INIT;
                         break;
                     case 0xF0:
                         matrix_clear();
@@ -281,14 +285,14 @@ uint8_t matrix_scan(void)
                         clear_keyboard();
                         xprintf("unexpected scan code at F0: %02X\n", code);
                     }
-                    state = INIT;
+                    state = PS2_INIT;
                 }
                 break;
-            case E0_F0: // Break code of E0-prefixed
+            case PS2_E0_F0: // Break code of E0-prefixed
                 switch (code) {
                     case 0x12:  // to be ignored
                     case 0x59:  // to be ignored
-                        state = INIT;
+                        state = PS2_INIT;
                         break;
                     default:
                         if (code < 0x80) {
@@ -298,94 +302,94 @@ uint8_t matrix_scan(void)
                             clear_keyboard();
                             xprintf("unexpected scan code at E0_F0: %02X\n", code);
                         }
-                        state = INIT;
+                        state = PS2_INIT;
                 }
                 break;
             // following are states of Pause
-            case E1:
+            case PS2_E1:
                 switch (code) {
                     case 0x14:
-                        state = E1_14;
+                        state = PS2_E1_14;
                         break;
                     default:
-                        state = INIT;
+                        state = PS2_INIT;
                 }
                 break;
-            case E1_14:
+            case PS2_E1_14:
                 switch (code) {
                     case 0x77:
-                        state = E1_14_77;
+                        state = PS2_E1_14_77;
                         break;
                     default:
-                        state = INIT;
+                        state = PS2_INIT;
                 }
                 break;
-            case E1_14_77:
+            case PS2_E1_14_77:
                 switch (code) {
                     case 0xE1:
-                        state = E1_14_77_E1;
+                        state = PS2_E1_14_77_E1;
                         break;
                     default:
-                        state = INIT;
+                        state = PS2_INIT;
                 }
                 break;
-            case E1_14_77_E1:
+            case PS2_E1_14_77_E1:
                 switch (code) {
                     case 0xF0:
-                        state = E1_14_77_E1_F0;
+                        state = PS2_E1_14_77_E1_F0;
                         break;
                     default:
-                        state = INIT;
+                        state = PS2_INIT;
                 }
                 break;
-            case E1_14_77_E1_F0:
+            case PS2_E1_14_77_E1_F0:
                 switch (code) {
                     case 0x14:
-                        state = E1_14_77_E1_F0_14;
+                        state = PS2_E1_14_77_E1_F0_14;
                         break;
                     default:
-                        state = INIT;
+                        state = PS2_INIT;
                 }
                 break;
-            case E1_14_77_E1_F0_14:
+            case PS2_E1_14_77_E1_F0_14:
                 switch (code) {
                     case 0xF0:
-                        state = E1_14_77_E1_F0_14_F0;
+                        state = PS2_E1_14_77_E1_F0_14_F0;
                         break;
                     default:
-                        state = INIT;
+                        state = PS2_INIT;
                 }
                 break;
-            case E1_14_77_E1_F0_14_F0:
+            case PS2_E1_14_77_E1_F0_14_F0:
                 switch (code) {
                     case 0x77:
-                        matrix_make(PAUSE);
-                        state = INIT;
+                        matrix_make(PS2_PAUSE);
+                        state = PS2_INIT;
                         break;
                     default:
-                        state = INIT;
+                        state = PS2_INIT;
                 }
                 break;
             // Following are states of Control'd Pause
-            case E0_7E:
+            case PS2_E0_7E:
                 if (code == 0xE0)
-                    state = E0_7E_E0;
+                    state = PS2_E0_7E_E0;
                 else
-                    state = INIT;
+                    state = PS2_INIT;
                 break;
-            case E0_7E_E0:
+            case PS2_E0_7E_E0:
                 if (code == 0xF0)
-                    state = E0_7E_E0_F0;
+                    state = PS2_E0_7E_E0_F0;
                 else
-                    state = INIT;
+                    state = PS2_INIT;
                 break;
-            case E0_7E_E0_F0:
+            case PS2_E0_7E_E0_F0:
                 if (code == 0x7E)
-                    matrix_make(PAUSE);
-                state = INIT;
+                    matrix_make(PS2_PAUSE);
+                state = PS2_INIT;
                 break;
             default:
-                state = INIT;
+                state = PS2_INIT;
         }
     }
 
@@ -425,6 +429,7 @@ uint8_t matrix_key_count(void)
 inline
 static void matrix_make(uint8_t code)
 {
+    xprintf("make %02X\r\n", code);
     if (!matrix_is_on(ROW(code), COL(code))) {
         matrix[ROW(code)] |= 1<<COL(code);
         is_modified = true;
@@ -434,6 +439,7 @@ static void matrix_make(uint8_t code)
 inline
 static void matrix_break(uint8_t code)
 {
+    xprintf("break %02X\r\n", code);
     if (matrix_is_on(ROW(code), COL(code))) {
         matrix[ROW(code)] &= ~(1<<COL(code));
         is_modified = true;
@@ -443,4 +449,32 @@ static void matrix_break(uint8_t code)
 void matrix_clear(void)
 {
     for (uint8_t i=0; i < MATRIX_ROWS; i++) matrix[i] = 0x00;
+}
+
+void matrix_print(void)
+{
+#if (MATRIX_COLS <= 8)
+    print("r/c 01234567\n");
+#elif (MATRIX_COLS <= 16)
+    print("r/c 0123456789ABCDEF\n");
+#elif (MATRIX_COLS <= 32)
+    print("r/c 0123456789ABCDEF0123456789ABCDEF\n");
+#endif
+
+    for (uint8_t row = 0; row < MATRIX_ROWS; row++) {
+
+#if (MATRIX_COLS <= 8)
+        xprintf("%02X: %08b%s\n", row, bitrev(matrix_get_row(row)),
+#elif (MATRIX_COLS <= 16)
+        xprintf("%02X: %016b%s\n", row, bitrev16(matrix_get_row(row)),
+#elif (MATRIX_COLS <= 32)
+        xprintf("%02X: %032b%s\n", row, bitrev32(matrix_get_row(row)),
+#endif
+#ifdef MATRIX_HAS_GHOST
+        matrix_has_ghost_in_row(row) ?  " <ghost" : ""
+#else
+        ""
+#endif
+        );
+    }
 }
