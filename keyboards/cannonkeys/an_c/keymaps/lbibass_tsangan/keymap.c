@@ -1,87 +1,78 @@
-/*  -*-  eval: (turn-on-orgtbl); -*-
- * default HHKB Layout
- */
 #include QMK_KEYBOARD_H
-
-#define BASE 0
-#define HHKB 1
-#define FN 2
-#define WINDOWS 3
-#define WHHKB 4
-#define WFN 5
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
-    /* BASE Level: Default Layer
-     |-------+---+---+---+---+---+---+---+---+---+---+-------+-----+-------+---|
-     | Esc   | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 0 | -     | =   | \     | ` |
-     |-------+---+---+---+---+---+---+---+---+---+---+-------+-----+-------+---|
-     | Tab   | Q | W | E | R | T | Y | U | I | O | P | [     | ]   | Backs |   |
-     |-------+---+---+---+---+---+---+---+---+---+---+-------+-----+-------+---|
-     | Cont  | A | S | D | F | G | H | J | K | L | ; | '     | Ent |       |   |
-     |-------+---+---+---+---+---+---+---+---+---+---+-------+-----+-------+---|
-     | Shift | Z | X | C | V | B | N | M | , | . | / | Shift | Fn0 |       |   |
-     |-------+---+---+---+---+---+---+---+---+---+---+-------+-----+-------+---|
+  /* 0: default */
+  LAYOUT_60_tsangan_hhkb(
+    KC_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSLASH, KC_GRAVE,
+    KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSPACE,
+   MT(MOD_LGUI, KC_ESC), KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, LT(2, KC_ENTER),
+    KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT, MO(1),
+    KC_LCTL, MO(1), KC_LALT,                   KC_SPC,                   KC_RGUI, KC_RALT, KC_RCTL
+  ),
+/*numpad layer*/
+   LAYOUT_60_tsangan_hhkb(
+    KC_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_P7,    KC_P8,    KC_P9,    KC_0,    KC_KP_MINUS, KC_KP_PLUS,  KC_BSLASH, KC_GRAVE,
+    KC_TAB,  KC_Q,    TO(4),    KC_E,    KC_R,    KC_T,    KC_Y,    KC_P4,    KC_P5,    KC_P6,    KC_KP_EQUAL,    KC_LBRC, KC_RBRC, KC_BSPACE,
+   MT(MOD_LGUI, KC_ESC), KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H, KC_P1,    KC_P2,    KC_P3,    KC_KP_ASTERISK, KC_QUOT, LT(2, KC_KP_ENTER),
+    KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_KP_0,    KC_COMM, KC_KP_DOT,  KC_KP_SLASH, KC_RSFT, MO(1),
+    KC_LCTL, MO(1), KC_LALT,                   KC_SPC,                    KC_RGUI, KC_RALT, KC_RCTL
+    ),
 
-            |------+------+-----------------------+------+------|
-            | LAlt | LGUI | ******* Space ******* | RGUI | RAlt |
-            |------+------+-----------------------+------+------|
-    */
-
-    [BASE] = LAYOUT_60_tsangan_hhkb( //  default layer
-        KC_ESC, KC_1, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7, KC_8, KC_9, KC_0, KC_MINS, KC_EQL, KC_BSLS, KC_GRV,
-        KC_TAB, KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_LBRC, KC_RBRC, KC_BSPC,
-        MT(MOD_LGUI, KC_ESC), KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_QUOT, LT(HHKB, KC_ENT),
-        KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_RSFT, MO(HHKB),
-        KC_LCTL,HHKB, KC_LALT, /*        */ KC_SPC, KC_RGUI, KC_RALT, KC_RCTL),
-
-    /* Layer HHKB: HHKB mode (HHKB Fn)
-      |------+-----+-----+-----+----+----+----+----+-----+-----+-----+-----+-------+-------+-----|
-      | Pwr  | F1  | F2  | F3  | F4 | F5 | F6 | F7 | F8  | F9  | F10 | F11 | F12   | Ins   | Del |
-      |------+-----+-----+-----+----+----+----+----+-----+-----+-----+-----+-------+-------+-----|
-      | Caps |     |     |     |    |    |    |    | Psc | Slk | Pus | Up  |       | Backs |     |
-      |------+-----+-----+-----+----+----+----+----+-----+-----+-----+-----+-------+-------+-----|
-      |      | VoD | VoU | Mut |    |    | *  | /  | Hom | PgU | Lef | Rig | Enter |       |     |
-      |------+-----+-----+-----+----+----+----+----+-----+-----+-----+-----+-------+-------+-----|
-      |      |     |     |     |    |    | +  | -  | End | PgD | Dow |     |       |       |     |
-      |------+-----+-----+-----+----+----+----+----+-----+-----+-----+-----+-------+-------+-----|
-
-                 |------+------+----------------------+------+------+
-                 | **** | **** | ******************** | **** | **** |
-                 |------+------+----------------------+------+------+
-
-     */
-
-    [HHKB] = LAYOUT_60_tsangan_hhkb(
-        KC_PWR, KC_BRID, KC_BRIU, KC_F3, KC_F4, KC_F5, KC_F6, KC_MRWD, KC_MPLY, KC_MFFD, KC_MUTE, KC_VOLD, KC_VOLU, KC_INS, KC_DEL,
-        KC_CAPS, KC_MRWD, KC_MPLY, KC_MFFD, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_PSCR, KC_SLCK, KC_PAUS, KC_UP, KC_TRNS, KC_DEL,
-        KC_TRNS, KC_LEFT, KC_DOWN, KC_UP, KC_RIGHT, KC_TRNS, KC_PAST, KC_PSLS, KC_HOME, KC_PGUP, KC_LEFT, KC_RGHT, KC_PENT,
-        KC_TRNS, KC_VOLD, KC_VOLD, KC_MUTE, KC_TRNS, KC_TRNS, KC_PPLS, KC_PMNS, KC_END, KC_PGDN, KC_DOWN, KC_TRNS, MO(FN),
-        KC_LCTL,TO(WINDOWS), KC_LALT, /*        */ KC_SPC, KC_RGUI, KC_RALT, KC_RCTL),
-
-    [FN] = LAYOUT_60_tsangan_hhkb(
-        KC_PWR, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12, KC_INS, KC_DEL,
-        KC_CAPS, KC_MRWD, KC_MPLY, KC_MFFD, RGB_TOG, RGB_MOD, KC_TRNS, KC_TRNS, KC_PSCR, KC_SLCK, KC_PAUS, KC_UP, KC_TRNS, KC_DEL,
-        KC_TRNS, KC_LEFT, KC_DOWN, KC_UP, KC_RIGHT, KC_TRNS, KC_PAST, KC_PSLS, KC_HOME, KC_PGUP, KC_LEFT, KC_RGHT, KC_PENT,
-        KC_TRNS, KC_VOLD, KC_VOLD, KC_MUTE, KC_TRNS, KC_TRNS, KC_PPLS, KC_PMNS, KC_END, KC_PGDN, KC_DOWN, KC_TRNS, KC_TRNS,
-                KC_LCTL,HHKB, KC_LALT, /*        */ KC_SPC, KC_RGUI, KC_RALT, KC_RCTL),
-    [WINDOWS] = LAYOUT_60_tsangan_hhkb( //  default layer
-        KC_ESC, KC_1, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7, KC_8, KC_9, KC_0, KC_MINS, KC_EQL, KC_BSLS, KC_GRV,
-        KC_TAB, KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_LBRC, KC_RBRC, KC_BSPC,
-        MT(MOD_LCTL, KC_ESC), KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_QUOT, LT(WHHKB, KC_ENT),
-        KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_RSFT, MO(WHHKB),
-        WHHKB ,KC_LGUI, KC_LALT, /*        */ KC_SPC, KC_RALT, KC_RGUI, KC_RCTL),
-    [WHHKB] = LAYOUT_60_tsangan_hhkb(
-        KC_PWR, KC_BRID, KC_BRIU, KC_F3, KC_F4, KC_F5, KC_F6, KC_MPRV, KC_MPLY, KC_MNXT, KC_MUTE, KC_VOLD, KC_VOLU, KC_INS, KC_DEL,
-        KC_CAPS, KC_MRWD, KC_MPLY, KC_MFFD, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_PSCR, KC_SLCK, KC_PAUS, KC_UP, KC_TRNS, KC_DEL,
-        KC_TRNS, KC_LEFT, KC_DOWN, KC_UP, KC_RIGHT, KC_TRNS, KC_PAST, KC_PSLS, KC_HOME, KC_PGUP, KC_LEFT, KC_RGHT, KC_PENT,
-        KC_TRNS, KC_VOLD, KC_VOLD, KC_MUTE, KC_TRNS, KC_TRNS, KC_PPLS, KC_PMNS, KC_END, KC_PGDN, KC_DOWN, KC_TRNS, MO(WFN),
-        WHHKB ,KC_LGUI, KC_LALT, /*        */ KC_SPC, KC_RALT, KC_RGUI, KC_RCTL),
-
-    [WFN] = LAYOUT_60_tsangan_hhkb(
-        KC_PWR, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12, KC_INS, KC_DEL,
-        KC_CAPS, KC_MRWD, KC_MPLY, KC_MFFD, RGB_TOG, RGB_MOD, KC_TRNS, KC_TRNS, KC_PSCR, KC_SLCK, KC_PAUS, KC_UP, KC_TRNS, KC_DEL,
-        KC_TRNS, KC_LEFT, KC_DOWN, KC_UP, KC_RIGHT, KC_TRNS, KC_PAST, KC_PSLS, KC_HOME, KC_PGUP, KC_LEFT, KC_RGHT, KC_PENT,
-        KC_TRNS, KC_VOLD, KC_VOLD, KC_MUTE, KC_TRNS, KC_TRNS, KC_PPLS, KC_PMNS, KC_END, KC_PGDN, KC_DOWN, KC_TRNS, KC_TRNS,
-        WHHKB ,KC_LGUI, KC_LALT, /*        */ KC_SPC, KC_RALT, KC_RGUI, KC_RCTL),
-        };
+  /* 1: winkeyless */
+  LAYOUT_60_tsangan_hhkb(
+    KC_GRAVE,  KC_BRID,    KC_BRIU,    KC_F3,    KC_F4,    KC_F5,    KC_F6,    KC_MRWD,    KC_MPLY,    KC_MFFD,    KC_MUTE,    KC_VOLD, KC_VOLU, KC_INS, KC_DEL,
+    KC_CAPS,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_UP, KC_RBRC, KC_DEL,
+    KC_TRNS, KC_LEFT,    KC_DOWN,    KC_UP,    KC_RIGHT,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_LEFT, KC_RIGHT, LT(2, KC_ENTER),
+    KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_DOWN, KC_RSFT,  MO(3),
+    KC_LCTL, MO(1), KC_LALT,                   KC_SPC,                   KC_RGUI, KC_RALT, MO(3)
+  ),
+  /* 3: fn */
+  LAYOUT_60_tsangan_hhkb(
+    KC_GRAVE, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,   KC_INS, KC_DEL,
+    KC_CAPS, _______, _______,   _______, RESET, _______, _______, _______, _______, _______, _______, KC_UP,   _______, KC_DEL,
+    _______, KC_LEFT, KC_DOWN, KC_UP, KC_RIGHT, _______, _______, _______, _______, _______, KC_LEFT, KC_RGHT, _______,
+    _______, _______, _______, _______, _______, HPT_TOG,HPT_DWLI,HPT_DWLD, _______, _______, KC_DOWN, _______, MO(2),
+    _______, _______, _______,                    _______,                  _______, _______,  _______
+  ),
+  LAYOUT_60_tsangan_hhkb(
+    KC_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSLASH, KC_GRAVE,
+    KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSPACE,
+   MT(MOD_LCTL, KC_ESC), KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, LT(6, KC_ENTER),
+    KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT, MO(5),
+    MO(5), KC_LGUI, KC_LALT,                   KC_SPC,                    KC_RALT, KC_RGUI, KC_RCTL
+  ),
+ LAYOUT_60_tsangan_hhkb(
+    KC_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_P7,    KC_P8,    KC_P9,    KC_0,    KC_KP_MINUS, KC_KP_PLUS,  KC_BSLASH, KC_GRAVE,
+    KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_P4,    KC_P5,    KC_P6,    KC_KP_EQUAL,    KC_LBRC, KC_RBRC, KC_BSPACE,
+   MT(MOD_LCTL, KC_ESC), KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H, KC_P1,    KC_P2,    KC_P3,    KC_KP_ASTERISK, KC_QUOT, LT(6, KC_KP_ENTER),
+    KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_KP_0,    KC_COMM, KC_KP_DOT,  KC_KP_SLASH, KC_RSFT, MO(2),
+    MO(5), KC_LGUI, KC_LALT,                   KC_SPC,                    KC_RALT, KC_RGUI, KC_RCTL
+    ),
+LAYOUT_60_tsangan_hhkb(
+    KC_GRAVE,  KC_BRID,    KC_BRIU,    KC_F3,    KC_F4,    KC_F5,    KC_F6,    KC_MEDIA_PREV_TRACK,    KC_MPLY,    KC_MEDIA_NEXT_TRACK,    KC_MUTE,    KC_VOLD, KC_VOLU,  KC_INS, KC_DEL,
+    KC_CAPS,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_UP, KC_RBRC, KC_DEL,
+    KC_TRNS, KC_LEFT,    KC_DOWN,    KC_UP,    KC_RIGHT,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_LEFT, KC_RIGHT, LT(7, KC_ENTER),
+    KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_DOWN, KC_RSFT,  MO(3),
+    KC_LCTL, KC_LGUI, KC_LALT,                   KC_SPC,                     KC_RALT, KC_RALT, MO(7)
+  ),
+LAYOUT_60_tsangan_hhkb(
+    KC_GRAVE, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,    KC_INS,KC_DEL,
+    KC_CAPS, _______, _______,   _______, RESET, _______, _______, _______, _______, _______, _______, KC_UP,   _______, KC_DEL,
+    _______, KC_LEFT, KC_DOWN, KC_UP, KC_RIGHT, _______, _______, _______, _______, _______, KC_LEFT, KC_RGHT, _______,
+    _______, _______, _______, _______, _______, HPT_TOG,HPT_DWLI,HPT_DWLD, _______, _______, KC_DOWN, _______, MO(2),
+    _______, _______, _______,                    _______,                    _______, _______,  _______
+  ),
+};
+bool led_update_kb(led_t led_state) {
+    bool res = led_update_user(led_state);
+    if(res) {
+        // writePin sets the pin high for 1 and low for 0.
+        // In this example the pins are inverted, setting
+        // it low/0 turns it on, and high/1 turns the LED off.
+        // This behavior depends on whether the LED is between the pin
+        // and VCC or the pin and GND.
+        writePin(B4, !led_state.caps_lock);
+    }
+    return res;
+}
