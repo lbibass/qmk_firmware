@@ -3,10 +3,12 @@ MCU = STM32F072
 
 # Build Options
 #   comment out to disable the options.
-#
+BOOTLOADER = stm32-dfu
+DFU_SUFFIX_ARGS = -v FFFF -p FFFF
 
 
-BOOTMAGIC_ENABLE = lite	# Virtual DIP switch configuration
+
+BOOTMAGIC_ENABLE = yes	# Virtual DIP switch configuration
 MOUSEKEY_ENABLE = yes	# Mouse keys
 EXTRAKEY_ENABLE = yes	# Audio control and System control
 CONSOLE_ENABLE = yes	# Console for debug

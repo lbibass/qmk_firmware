@@ -17,15 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-/* USB Device descriptor parameter */
-#define VENDOR_ID       0xCB4B
-#define PRODUCT_ID      0xA350
-#define DEVICE_VER      0x0002
 /* in python2: list(u"whatever".encode('utf-16-le')) */
 /*   at most 32 characters or the ugly hack in usb_main.c borks */
-#define MANUFACTURER BoardNotBored
-#define PRODUCT Mimi
-#define DESCRIPTION MIMI Keyboard
 
 /* key matrix size */
 #define MATRIX_ROWS 5
@@ -46,11 +39,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* Locking resynchronize hack */
 #define LOCKING_RESYNC_ENABLE
 
-#define RGBLIGHT_ANIMATIONS
+// #define RGBLIGHT_ANIMATIONS THIS WORK
+// #define RGB_DI_PIN A7 THIS WORK
+// #define RGBLED_NUM 14 THIS WORK
+// // #define WS2812_SPI SPID2
+// //#define WS2812_SPI_MOSI_PAL_MODE 5
+
+#define RGBLIGHT_EFFECT_BREATHING
+#define RGBLIGHT_EFFECT_RAINBOW_MOOD
+#define RGBLIGHT_EFFECT_RAINBOW_SWIRL
+#define RGBLIGHT_EFFECT_SNAKE
+#define RGBLIGHT_EFFECT_KNIGHT
+#define RGBLIGHT_EFFECT_CHRISTMAS
+#define RGBLIGHT_EFFECT_STATIC_GRADIENT
+#define RGBLIGHT_EFFECT_RGB_TEST
+#define RGBLIGHT_EFFECT_ALTERNATING
+#define RGBLIGHT_EFFECT_TWINKLE
 #define RGB_DI_PIN A7
 #define RGBLED_NUM 14
-// #define WS2812_SPI SPID2
-//#define WS2812_SPI_MOSI_PAL_MODE 5
+#define WS2812_SPI SPID2
+#define WS2812_SPI_MOSI_PAL_MODE 0
+#define WS2812_SPI_SCK_PAL_MODE 0
+#define WS2812_SPI_SCK_PIN A14
+
+
+
 
 #define DYNAMIC_KEYMAP_EEPROM_MAX_ADDR 3071 // this lets you use more of the 8kb of eeprom availible on the STM32F072CBT6. (3kB here)
 #define DYNAMIC_KEYMAP_LAYER_COUNT 10
