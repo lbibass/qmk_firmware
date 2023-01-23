@@ -145,10 +145,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 
 [_KP] = LAYOUT(
-    KC_ESC,     KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_F13,  KC_F14,   KC_7,    KC_8,    KC_9,    KC_MINS, KC_EQL,
-    _______,    KC_F5,   KC_F6,   KC_F7,   KC_F8,   XXXXXXX, XXXXXXX,  KC_4,    KC_5,    KC_6,    KC_ASTR, _______,
-    KC_NUMLOCK, KC_F1,   KC_F2,   KC_F3,   KC_F4,   XXXXXXX, XXXXXXX,  KC_1,    KC_2,    KC_3,    KC_SLSH, _______,
-    _______,    _______, _______, _______,     _______,          _______,       KC_0,    KC_DOT,  KC_PLUS, KC_END
+    KC_ESC,  KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_F13,  KC_F14,   KC_7,    KC_8,    KC_9,    KC_MINS, KC_EQL,
+    _______, KC_F5,   KC_F6,   KC_F7,   KC_F8,   XXXXXXX, XXXXXXX,  KC_4,    KC_5,    KC_6,    KC_ASTR, _______,
+    KC_NUM,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   XXXXXXX, XXXXXXX,  KC_1,    KC_2,    KC_3,    KC_SLSH, _______,
+    _______, _______, _______, _______,     _______,          _______,       KC_0,    KC_DOT,  KC_PLUS, KC_END
 ),
 
 [_LOWER] = LAYOUT(
@@ -159,16 +159,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 
 [_ADJUST] = LAYOUT(
-    _______, RESET,   DEBUG,   RGB_TOG, RGB_MOD, RGB_HUI, RGB_HUD, RGB_SAI, RGB_SAD, RGB_VAI, RGB_VAD, KC_DEL,
-    KC_RCTL, _______, MU_MOD,  AU_ON,   AU_OFF,  AG_NORM, AG_SWAP, _______, TG(_KP), KC_BRID, KC_BRIU, KC_MUTE,
+    _______, QK_BOOT, DB_TOGG, RGB_TOG, RGB_MOD, RGB_HUI, RGB_HUD, RGB_SAI, RGB_SAD, RGB_VAI, RGB_VAD, KC_DEL,
+    KC_RCTL, _______, MU_NEXT, AU_ON,   AU_OFF,  AG_NORM, AG_SWAP, _______, TG(_KP), KC_BRID, KC_BRIU, KC_MUTE,
     _______, RGB_TOG, KB_MAKE, KB_FLSH, KB_VRSN, KB_BOOT, _______, TG_SYS,  _______, _______, _______, KC_MPLY,
     KC_RCTL, _______, _______, _______,      _______,          _______,     KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT
 )
 
 /* [_ADJUST] = LAYOUT( */
-/*     _______, RESET,   DEBUG,   RGB_TOG, RGB_MOD, RGB_HUI, RGB_HUD, RGB_SAI, RGB_SAD,  RGB_VAI, RGB_VAD, KC_DEL , */
-/*     _______, _______, MU_MOD,  AU_ON,   AU_OFF,  AG_NORM, AG_SWAP, QWERTY,  COLEMAK,  DVORAK,  PLOVER,  _______, */
-/*     _______, MUV_DE,  MUV_IN,  MU_ON,   MU_OFF,  MI_ON,   MI_OFF,  TERM_ON, TERM_OFF, _______, _______, _______, */
+/*     _______, QK_BOOT, DB_TOGG, RGB_TOG, RGB_MOD, RGB_HUI, RGB_HUD, RGB_SAI, RGB_SAD, RGB_VAI, RGB_VAD, KC_DEL , */
+/*     _______, _______, MU_NEXT, AU_ON,   AU_OFF,  AG_NORM, AG_SWAP, QWERTY,  COLEMAK, DVORAK,  PLOVER,  _______, */
+/*     _______, AU_PREV, AU_NEXT, MU_ON,   MU_OFF,  MI_ON,   MI_OFF,  _______, _______, _______, _______, _______, */
 /*     _______, _______, _______, _______,      _______,          _______,     _______, _______, _______,  _______ */
 /* ) */
 
@@ -338,7 +338,7 @@ uint16_t muse_counter = 0;
 uint8_t muse_offset = 70;
 uint16_t muse_tempo = 50;
 
-void encoder_update(bool clockwise) {
+bool encoder_update_user(uint8_t index, bool clockwise) {
   if (muse_mode) {
     if (IS_LAYER_ON(_RAISE)) {
       if (clockwise) {
@@ -368,9 +368,10 @@ void encoder_update(bool clockwise) {
       #endif
     }
   }
+    return true;
 }
 
-void dip_switch_update_user(uint8_t index, bool active) {
+bool dip_switch_update_user(uint8_t index, bool active) {
     switch (index) {
         case 0: {
 #ifdef AUDIO_ENABLE
@@ -399,6 +400,7 @@ void dip_switch_update_user(uint8_t index, bool active) {
                 muse_mode = false;
             }
     }
+    return true;
 }
 
 void keyboard_post_init_keymap(void) {
