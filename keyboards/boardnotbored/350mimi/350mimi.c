@@ -35,7 +35,7 @@ bool led_update_kb(led_t led_state) {
 
 void eeconfig_init_kb(void) {  // EEPROM is getting reset!
   rgblight_enable(); // Enable RGB by default
-  rgblight_sethsv(0, 255, 128);  // Set default HSV - red hue, full saturation, medium brightness
+  rgblight_sethsv(255, 255, 255);  // Set default HSV - red hue, full saturation, medium brightness
   rgblight_mode(RGBLIGHT_MODE_RAINBOW_SWIRL + 2); // set to RGB_RAINBOW_SWIRL by default
 
   eeconfig_update_kb(0);
